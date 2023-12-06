@@ -40,7 +40,12 @@ const encodeText = text => {
     const encoder = new TextEncoder()
     const utf8Bytes = encoder.encode(text.toString())
     const base64Content = btoa(String.fromCharCode.apply(null, utf8Bytes))
-    return base64Content;
+    return {
+        type: "text",
+        content: base64Content,
+        data: utf8Bytes,
+        toString: () => text
+    }
 }
 
 const encodeImage = imageFile => new Promise(async (resolve, reject) => {
@@ -124,6 +129,7 @@ export default function useGitHub() {
     const createFile = (filePath, content) => new Promise(async(resolve, reject) => {
         if (hasCredentials() && content != undefined && filePath != undefined) try {
             const contentBase64 = await encode64(content)
+            console.log(contentBase64)
             const response = await query(getApiUrl(filePath), 'PUT', {
                 message: `create file ${filePath}`,
                 content: contentBase64.content,

@@ -17,12 +17,14 @@ export default function GitHubEditor() {
     const [useImage, setUseImage] = useState(false)
 
     const fileName = () => inputFileName.current.value.length > 0 ? inputFileName.current.value : "image.png"
+    const getContent = () => useImage ? imgSrc : inputText.current.value;
 
-    const handleCreate = () => gh.createFile(fileName(), imgSrc)
+
+    const handleCreate = () => gh.createFile(fileName(), getContent())
         .then(response => { setTxt("Created"); console.log(response) })
         .catch(error => { setTxt("Not created (already exists?)"); console.error(error) })
 
-    const handleEdit = () => gh.editFile(fileName(), imgSrc)
+    const handleEdit = () => gh.editFile(fileName(), getContent())
         .then(response => { setTxt("Edited"); console.log(response) })
         .catch(error => { setTxt("Not edited"); console.error(error) })
 
